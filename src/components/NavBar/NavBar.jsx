@@ -30,7 +30,6 @@ export default function NavBar() {
         <ul className="d-flex align-items-center list-unstyled">
             <li className="px-2">
                 <a href="http://www.instagram.com">
-                <i class="fa-brands fa-instagram"></i>
                 <FontAwesomeIcon icon={faInstagram} />
               
                 </a>

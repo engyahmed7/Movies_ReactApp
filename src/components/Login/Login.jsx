@@ -2,6 +2,8 @@ import axios from "axios";
 import React, { useState } from "react";
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
 import { faSpinner } from '@fortawesome/free-solid-svg-icons'
+import { useLocation } from 'react-router-dom';
+
 
 export default function Login() {
   const [error, setError] = useState("");
@@ -10,6 +12,10 @@ export default function Login() {
     email: "",
     password: "",
   });
+
+  const location = useLocation();
+  const queryParams = new URLSearchParams(location.search);
+  const isVerified = queryParams.get('verified');
 
   function getUser(e) {
     let myuser = { ...user };
@@ -20,21 +26,23 @@ export default function Login() {
   async function submitForm(e) {
     e.preventDefault();
     try {
+
       setLoading(true);
-      let { data } = await axios.post(
-        `http://localhost:3001/v1/auth/login`,
-        user
-      );
-      console.log(data);
-      if (data.message === "user exist") {
+      const response = await axios.post(`http://localhost:3001/auth/signIn`, user);
+  
+      if (response && response.data && response.data.message === "userExist") {
         setLoading(false);
+        const token = response.data.token;
+
+        localStorage.setItem('authToken', token);
         window.location.href = "/home";
       }
     } catch (error) {
       setLoading(false);
-      let errorMsg= error.response.data.message
-      let errMsg =  errorMsg.replace(/['"]/g, '');
-      setError (errMsg);
+      console.error("An error occurred:", error.response?.data?.message || "Unknown error");
+      let errorMsg = error.response?.data?.message;
+      let errMsg = errorMsg ? errorMsg.replace(/['"]/g, '') : "An unknown error occurred";
+      setError(errMsg);
     }
   }
 
@@ -49,6 +57,13 @@ export default function Login() {
               ))}
             </div>
           )} 
+          
+      {isVerified === 'true' && (
+        <div className="alert alert-success">Your email has been verified. You can now log in.</div>
+      )}
+      {isVerified === 'false' && (
+        <div className="alert alert-danger">Email verification failed. Please try again.</div>
+      )}
         <div className="px-3">
           <label htmlFor="email"></label>
           <input

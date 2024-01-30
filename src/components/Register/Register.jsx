@@ -8,11 +8,11 @@ export default function Register() {
   const [loading, setLoading] = useState(false);
 
   const [user, setUser] = useState({
-    name: "",
+    userName: "",
     email: "",
     password: "",
-    confirmpassword: "",
-    phoneNumber: "",
+    cpassword: "",
+    age: 0,
   });
 
   function getUser(e) {
@@ -27,9 +27,9 @@ export default function Register() {
   
     try {
       setLoading(true);
-      const response = await axios.post(`http://localhost:3001/v1/auth/register`, user);
+      const response = await axios.post(`http://localhost:3001/auth/signUp`, user);
   
-      if (response && response.data && response.data.role === 'user') {
+      if (response && response.data && response.data.message === 'User added successfully') {
         setLoading(false);
         window.location.href = "/login";
       }
@@ -57,12 +57,12 @@ export default function Register() {
             </div>
           )} 
           <div className="my-3">
-            <label htmlFor="first-name pb-2"></label>
+            <label htmlFor="userName pb-2"></label>
             <input
               type="text"
               onChange={getUser}
-              placeholder="first name"
-              name="name"
+              placeholder="Username"
+              name="userName"
               className="form-control"
             />
           </div>
@@ -88,22 +88,22 @@ export default function Register() {
             />
           </div>
           <div className="my-3">
-            <label htmlFor="password pb-2"></label>
+            <label htmlFor="cpassword pb-2"></label>
             <input
               type="password"
               onChange={getUser}
               placeholder="Confirm password"
-              name="confirmpassword"
+              name="cpassword"
               className="form-control"
             />
           </div>
           <div className="my-3">
-            <label htmlFor="last-name pb-2"></label>
+            <label htmlFor="age pb-2"></label>
             <input
               type="text"
               onChange={getUser}
-              placeholder="phoneNumber"
-              name="phoneNumber"
+              placeholder="age"
+              name="age"
               className="form-control"
             />
           </div>
