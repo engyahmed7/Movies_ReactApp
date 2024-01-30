@@ -43,8 +43,7 @@ export default function Register() {
         <h1 className="pb-3">Register Now</h1>
 
         <form onSubmit={formSubmit}>
-          {/* {error && <div className="alert alert-danger"></div>} */}
-          <div className="alert alert-danger"> {error}</div>
+          {error && <div className="alert alert-danger"> {error}</div> } 
           <div className="my-3">
             <label htmlFor="first-name pb-2"></label>
             <input

@@ -24,9 +24,6 @@ export default function Login() {
       console.log(data);
       if (data.message === "user exist") {
         window.location.href = "/home";
-      } else {
-        setError(data.message);
-        console.log(error.message);
       }
     } catch (error) {
       setError(error.response.data.message);
@@ -38,7 +35,7 @@ export default function Login() {
     <div className="w-75 mx-auto py-3">
       <h1 className="pb-3">Login</h1>
       <form onSubmit={submitForm}>
-        <div className="alert alert-danger"> {error}</div>
+        {error && <div className="alert alert-danger"> {error}</div> } 
         <div className="px-3">
           <label htmlFor="email"></label>
           <input
