@@ -1,6 +1,12 @@
 import React from "react";
 import { NavLink } from "react-router-dom";
-import "@fortawesome/fontawesome-free"
+
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faTwitter, faInstagram,faFacebook } from '@fortawesome/free-brands-svg-icons'
+
+
+
+
 
 export default function NavBar() {
   return (
@@ -24,17 +30,19 @@ export default function NavBar() {
         <ul className="d-flex align-items-center list-unstyled">
             <li className="px-2">
                 <a href="http://www.instagram.com">
-                    <i class="fa fa-facebook"></i>
+                <i class="fa-brands fa-instagram"></i>
+                <FontAwesomeIcon icon={faInstagram} />
+              
                 </a>
             </li>
             <li className="px-2">
-                <a href="http://www.instagram.com">
-                    <i class="fa fa-twitter"></i>
+                <a href="http://www.twitter.com">
+                <FontAwesomeIcon icon={faTwitter} />
                 </a>
             </li>
             <li className="px-2">
-                <a href="http://www.instagram.com">
-                    <i class="fa fa-instagram"></i>
+                <a href="http://www.facebook.com">
+                <FontAwesomeIcon icon={faFacebook} />
                 </a>
             </li>
             <li className="px-2">
@@ -46,7 +54,6 @@ export default function NavBar() {
             <li className="px-2">
                 <NavLink to="/logout">Logout</NavLink>
             </li>
-
         </ul>
       </nav>
     </>

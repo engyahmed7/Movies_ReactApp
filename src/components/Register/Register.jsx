@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 export default function Register() {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   const [user, setUser] = useState({
     name: "",
@@ -23,19 +26,22 @@ export default function Register() {
     e.preventDefault();
   
     try {
-      let { data } = await axios.post(`http://localhost:3001/v1/auth/register`, user);
+      setLoading(true);
+      const response = await axios.post(`http://localhost:3001/v1/auth/register`, user);
   
-      if (data.role === 'user') {
+      if (response && response.data && response.data.role === 'user') {
+        setLoading(false);
         window.location.href = "/login";
-      } else {
-        setError(data.message);
-        console.log(error.message);
       }
     } catch (error) {
-      console.error("An error occurred:", error.response.data.message);
-      setError(error.response.data.message);
+      setLoading(false);
+      console.error("An error occurred:", error.response?.data?.message || "Unknown error");
+      let errorMsg = error.response?.data?.message;
+      let errMsg = errorMsg ? errorMsg.replace(/['"]/g, '') : "An unknown error occurred";
+      setError(errMsg);
     }
   }
+  
   
   return (
     <>
@@ -43,7 +49,13 @@ export default function Register() {
         <h1 className="pb-3">Register Now</h1>
 
         <form onSubmit={formSubmit}>
-          {error && <div className="alert alert-danger"> {error}</div> } 
+        {error && (
+            <div className="alert alert-danger">
+              {error.split(',').map((errMsg, index) => (
+                <div className="fw-bold" key={index}>{errMsg.trim()}</div>
+              ))}
+            </div>
+          )} 
           <div className="my-3">
             <label htmlFor="first-name pb-2"></label>
             <input
@@ -97,8 +109,7 @@ export default function Register() {
           </div>
 
           <button type="submit" className="btn btn-info mt-3 ">
-            {" "}
-            Register
+            {loading? <FontAwesomeIcon icon={faSpinner} spinPulse /> : 'Register' } 
           </button>
         </form>
       </div>

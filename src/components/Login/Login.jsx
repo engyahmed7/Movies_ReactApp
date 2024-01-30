@@ -1,8 +1,11 @@
 import axios from "axios";
 import React, { useState } from "react";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
+import { faSpinner } from '@fortawesome/free-solid-svg-icons'
 
 export default function Login() {
   const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
   const [user, setUser] = useState({
     email: "",
     password: "",
@@ -17,17 +20,21 @@ export default function Login() {
   async function submitForm(e) {
     e.preventDefault();
     try {
+      setLoading(true);
       let { data } = await axios.post(
         `http://localhost:3001/v1/auth/login`,
         user
       );
       console.log(data);
       if (data.message === "user exist") {
+        setLoading(false);
         window.location.href = "/home";
       }
     } catch (error) {
-      setError(error.response.data.message);
-      console.log(error.response.data.message);
+      setLoading(false);
+      let errorMsg= error.response.data.message
+      let errMsg =  errorMsg.replace(/['"]/g, '');
+      setError (errMsg);
     }
   }
 
@@ -35,7 +42,13 @@ export default function Login() {
     <div className="w-75 mx-auto py-3">
       <h1 className="pb-3">Login</h1>
       <form onSubmit={submitForm}>
-        {error && <div className="alert alert-danger"> {error}</div> } 
+      {error && (
+            <div className="alert alert-danger">
+              {error.split(',').map((errMsg, index) => (
+                <div className="fw-bold" key={index}>{errMsg.trim()}</div>
+              ))}
+            </div>
+          )} 
         <div className="px-3">
           <label htmlFor="email"></label>
           <input
@@ -57,7 +70,7 @@ export default function Login() {
           />
         </div>
         <button type="submit" className="btn btn-info m-3">
-          LOGIN
+        {loading? <FontAwesomeIcon icon={faSpinner} spinPulse /> : 'Login' }
         </button>
       </form>
     </div>
